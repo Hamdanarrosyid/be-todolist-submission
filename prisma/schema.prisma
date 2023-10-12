@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Activity {
+  @@map("activities")
+  activity_id Int      @id @default(autoincrement())
+  title       String
+  email       String   @unique
+  created_at  DateTime @default(now())
+  Todo        Todo[]
+}
+
+model Todo {
+  @@map("todos")
+  todo_id           Int      @id @default(autoincrement())
+  activity_group    Activity @relation(fields: [activity_group_id], references: [activity_id])
+  activity_group_id Int
+  title String
+  priority Priority?
+  is_active Boolean?
+  created_at  DateTime @default(now())
+}
+
+enum Priority {
+  VERY_HIGH
+  HIGH
+  MEDIUM
+  LOW
+  VERY_LOW
+}
